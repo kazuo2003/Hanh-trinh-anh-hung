@@ -42,45 +42,81 @@ MAP_DESC = {
     "Khu rừng cổ": "Rất nguy hiểm, nhiều bí ẩn, boss ẩn.",
     "Lâu đài": "Nơi cuối cùng, boss mạnh nhất cư ngụ. Chỉ mở khi đủ điều kiện."
 }
+
 BASE_CLASSES = {
-    "Nhà phiêu lưu": {"STR": 4, "DEX": 4, "VIT": 4, "INT": 4, "LUCK": 4, "HP": 28, "MP": 12}
+    "Kiếm sĩ":   {"STR": 6, "DEX": 4, "VIT": 5, "INT": 2, "LUCK": 3, "HP": 32, "MP": 10},
+    "Pháp sư":   {"STR": 2, "DEX": 3, "VIT": 4, "INT": 8, "LUCK": 4, "HP": 22, "MP": 24},
+    "Sát thủ":   {"STR": 4, "DEX": 8, "VIT": 4, "INT": 2, "LUCK": 5, "HP": 26, "MP": 12},
+    "Cung thủ":  {"STR": 4, "DEX": 7, "VIT": 4, "INT": 3, "LUCK": 5, "HP": 25, "MP": 11},
+    "Võ sư":     {"STR": 7, "DEX": 5, "VIT": 6, "INT": 2, "LUCK": 2, "HP": 34, "MP": 8}
 }
+
 ADVANCED_CLASSES = {
-    # Lộ ra sau chuyển chức
-    "Chiến binh": {"STR": 8, "DEX": 3, "VIT": 8, "INT": 1, "LUCK": 2, "HP": 38, "MP": 12},
-    "Pháp sư":    {"STR": 2, "DEX": 4, "VIT": 4, "INT": 11, "LUCK": 3, "HP": 25, "MP": 32},
-    "Sát thủ":    {"STR": 6, "DEX": 8, "VIT": 4, "INT": 2, "LUCK": 5, "HP": 29, "MP": 11},
-    # Class ẩn (ẩn khi chưa đủ điều kiện)
-    "Anh hùng bóng tối": {"STR": 10, "DEX": 6, "VIT": 7, "INT": 8, "LUCK": 7, "HP": 42, "MP": 18, "hidden": True}
+    # Class nâng cao công khai
+    "Kiếm khách":    {"STR": 10, "DEX": 5, "VIT": 9, "INT": 3, "LUCK": 4, "HP": 42, "MP": 14, "base": "Kiếm sĩ"},
+    "Pháp sư cấp cao":{"STR": 3, "DEX": 4, "VIT": 5, "INT": 13, "LUCK": 4, "HP": 25, "MP": 38, "base": "Pháp sư"},
+    "Sát thủ bóng đêm":{"STR": 7, "DEX": 12, "VIT": 6, "INT": 3, "LUCK": 7, "HP": 30, "MP": 19, "base": "Sát thủ"},
+    "Xạ thủ":        {"STR": 6, "DEX": 12, "VIT": 6, "INT": 4, "LUCK": 7, "HP": 28, "MP": 16, "base": "Cung thủ"},
+    "Võ tướng":      {"STR": 12, "DEX": 7, "VIT": 10, "INT": 3, "LUCK": 4, "HP": 44, "MP": 12, "base": "Võ sư"},
+    # Class ẩn cực mạnh (ẩn khi chưa đủ điều kiện)
+    "Kiếm thánh":    {"STR": 15, "DEX": 7, "VIT": 12, "INT": 5, "LUCK": 7, "HP": 55, "MP": 22, "base": "Kiếm sĩ", "hidden": True},
+    "Pháp thần":     {"STR": 4, "DEX": 6, "VIT": 7, "INT": 20, "LUCK": 7, "HP": 32, "MP": 60, "base": "Pháp sư", "hidden": True},
+    "Bóng ma":       {"STR": 10, "DEX": 18, "VIT": 8, "INT": 5, "LUCK": 10, "HP": 36, "MP": 30, "base": "Sát thủ", "hidden": True},
+    "Thợ săn huyền thoại": {"STR": 9, "DEX": 18, "VIT": 8, "INT": 7, "LUCK": 10, "HP": 34, "MP": 26, "base": "Cung thủ", "hidden": True},
+    "Quyền vương":   {"STR": 18, "DEX": 10, "VIT": 16, "INT": 4, "LUCK": 6, "HP": 62, "MP": 18, "base": "Võ sư", "hidden": True}
 }
+
 CLASS_SKILLS = {
-    "Chiến binh": ["Đòn Mạnh", "Khiên chắn"],
-    "Pháp sư": ["Quả cầu lửa", "Hồi phục"],
+    "Kiếm sĩ": ["Chém nhanh", "Phòng ngự"],
+    "Pháp sư": ["Quả cầu lửa", "Khiên phép"],
     "Sát thủ": ["Đâm lén", "Tàng hình"],
-    "Anh hùng bóng tối": ["Bóng tối vĩnh cửu", "Hồi phục bóng tối"],
-    "Nhà phiêu lưu": ["Khích lệ"]
+    "Cung thủ": ["Bắn 3 mũi", "Bẫy dây"],
+    "Võ sư": ["Liên hoàn cước", "Hộ thể"],
+    "Kiếm khách": ["Chém xoáy", "Kiếm khí"],
+    "Pháp sư cấp cao": ["Lốc xoáy lửa", "Kháng phép"],
+    "Sát thủ bóng đêm": ["Cú đâm chí mạng", "Ẩn thân"],
+    "Xạ thủ": ["Bão tên", "Bẫy độc"],
+    "Võ tướng": ["Cú đấm sấm sét", "Bất khuất"],
+    # Class ẩn
+    "Kiếm thánh": ["Thánh kiếm", "Bất khả chiến bại"],
+    "Pháp thần": ["Thiên hỏa", "Hồi sinh"],
+    "Bóng ma": ["Ảo ảnh", "Đoạt mệnh"],
+    "Thợ săn huyền thoại": ["Mũi tên thần", "Ẩn thân vô hình"],
+    "Quyền vương": ["Tuyệt kỹ quyền vương", "Cường hóa"],
 }
+
 ITEM_DATABASE = {
-    "Kiếm sắt": {"type": "vũ khí", "STR": 2, "desc": "Tăng 2 sức mạnh", "quality": "thường"},
-    "Kiếm phép": {"type": "vũ khí", "INT": 3, "desc": "Tăng 3 trí tuệ", "quality": "hiếm"},
+    # Vũ khí cho các class
+    "Kiếm sắt": {"type": "vũ khí", "STR": 2, "desc": "Tăng 2 sức mạnh (Kiếm sĩ/Kiếm khách)", "quality": "thường", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
+    "Gậy phép": {"type": "vũ khí", "INT": 3, "desc": "Tăng 3 trí tuệ (Pháp sư)", "quality": "thường", "class": ["Pháp sư","Pháp sư cấp cao","Pháp thần"]},
+    "Dao găm": {"type": "vũ khí", "DEX": 2, "desc": "Tăng 2 nhanh nhẹn (Sát thủ)", "quality": "thường", "class": ["Sát thủ","Sát thủ bóng đêm","Bóng ma"]},
+    "Cung gỗ": {"type": "vũ khí", "DEX": 2, "desc": "Tăng 2 nhanh nhẹn (Cung thủ)", "quality": "thường", "class": ["Cung thủ", "Xạ thủ", "Thợ săn huyền thoại"]},
+    "Găng tập": {"type": "vũ khí", "STR": 1, "DEX": 1, "desc": "Tăng 1 sức mạnh, 1 nhanh nhẹn (Võ sư)", "quality": "thường", "class": ["Võ sư","Võ tướng","Quyền vương"]},
+    # Vũ khí truyền thuyết
+    "Kiếm truyền thuyết": {"type": "vũ khí", "STR": 6, "desc": "Vũ khí cực mạnh! (Kiếm sĩ/Kiếm khách/Kiếm thánh)", "quality": "siêu hiếm", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
+    "Trượng cổ đại": {"type": "vũ khí", "INT": 8, "desc": "Tăng 8 INT cho pháp sư", "quality": "hiếm", "class": ["Pháp sư","Pháp sư cấp cao","Pháp thần"]},
+    # Trang bị chung
     "Áo giáp nhẹ": {"type": "áo giáp", "VIT": 2, "desc": "Tăng 2 thể chất", "quality": "thường"},
     "Nhẫn may mắn": {"type": "nhẫn", "LUCK": 2, "desc": "Tăng 2 may mắn", "quality": "hiếm"},
     "Thuốc máu": {"type": "thuốc", "HP": 20, "desc": "Hồi phục 20 HP"},
     "Thuốc mana": {"type": "thuốc", "MP": 15, "desc": "Hồi phục 15 MP"},
     "Mảnh phép bí ẩn": {"type": "chế", "desc": "Dùng để chế tạo vật phẩm cực mạnh", "quality": "siêu hiếm"}
 }
+
 MONSTER_DATABASE = {
     "Slime": {"HP": 18, "MP": 0, "STR": 3, "DEX": 2, "VIT": 2, "EXP": 8, "Gold": 5, "drops": ["Thuốc máu"]},
     "Goblin": {"HP": 22, "MP": 2, "STR": 4, "DEX": 3, "VIT": 3, "EXP": 12, "Gold": 7, "drops": ["Kiếm sắt", "Thuốc máu"]},
-    "Drake": {"HP": 36, "MP": 0, "STR": 7, "DEX": 5, "VIT": 5, "EXP": 25, "Gold": 15, "drops": ["Kiếm phép", "Nhẫn may mắn"]},
+    "Drake": {"HP": 36, "MP": 0, "STR": 7, "DEX": 5, "VIT": 5, "EXP": 25, "Gold": 15, "drops": ["Cung gỗ", "Nhẫn may mắn"]},
     "Yeti": {"HP": 45, "MP": 0, "STR": 8, "DEX": 3, "VIT": 8, "EXP": 35, "Gold": 21, "drops": ["Áo giáp nhẹ", "Thuốc máu"]},
     "Dark Lord": {"HP": 110, "MP": 35, "STR": 18, "DEX": 9, "VIT": 13, "EXP": 140, "Gold": 100, "drops": ["Mảnh phép bí ẩn"]}
 }
+
 PET_DATABASE = {
     "Slime": {"hp": 24, "atk": 4, "skill": "Múc dính"},
     "Drake": {"hp": 40, "atk": 8, "skill": "Lửa phun"},
     "Yeti": {"hp": 50, "atk": 12, "skill": "Gầm băng giá"}
 }
+
 QUEST_DATABASE = [
     {
         "id": 1,
@@ -123,7 +159,7 @@ ACHIEVE_LIST = [
     {"name": "Đánh bại boss cuối", "desc": "Đánh bại Dark Lord ở Lâu đài.", "condition": "boss_final"},
     {"name": "Sưu tầm pet", "desc": "Bắt được đủ 3 loại pet.", "condition": "all_pets"},
     {"name": "Vua kho báu", "desc": "Tìm tối thiểu 5 kho báu.", "condition": "treasure_hunter"},
-    {"name": "Chuyển chức thành Anh hùng bóng tối", "desc": "Khám phá class ẩn và chuyển chức thành công.", "condition": "dark_hero"}
+    {"name": "Chuyển chức class ẩn", "desc": "Khám phá và chuyển chức thành công class ẩn.", "condition": "secret_class"}
 ]
 EVENTS = [
     {"name": "kho_bau", "desc": "Bạn tìm thấy một rương kho báu!", "reward": "random_item"},
@@ -296,7 +332,7 @@ def show_cutscene(key):
     scenes = {
         "intro": """
 [bold cyan]
-Bạn tỉnh dậy ở một vùng đất xa lạ, ký ức mờ nhạt về thân phận.  
+Bạn tỉnh dậy ở một vùng đất xa lạ, ký ức mờ nhạt về thân phận.
 Đây là thế giới của những cuộc phiêu lưu, nơi số phận chờ bạn viết nên câu chuyện của chính mình...
 [/bold cyan]
         """,
@@ -360,10 +396,10 @@ def transition_effect(loc):
 
 # ==== GAME LOGIC ==== #
 class Hero:
-    def __init__(self, name):
-        base = BASE_CLASSES["Nhà phiêu lưu"]
+    def __init__(self, name, baseclass):
+        base = BASE_CLASSES[baseclass]
         self.name = name
-        self.char_class = "Nhà phiêu lưu"
+        self.char_class = baseclass
         self.level = 1
         self.exp = 0
         self.gold = 20
@@ -373,8 +409,15 @@ class Hero:
         self.max_mp = base["MP"]
         self.mp = self.max_mp
         self.inventory = ["Thuốc máu", "Thuốc máu", "Thuốc máu"]
-        self.equipment = {"vũ khí": None, "áo giáp": None, "nhẫn": None}
-        self.skills = CLASS_SKILLS["Nhà phiêu lưu"][:]
+        # Trang bị vũ khí đúng class
+        for item in ITEM_DATABASE:
+            it = ITEM_DATABASE[item]
+            if it.get("type") == "vũ khí" and baseclass in it.get("class", []):
+                self.equipment = {"vũ khí": item, "áo giáp": None, "nhẫn": None}
+                break
+        else:
+            self.equipment = {"vũ khí": None, "áo giáp": None, "nhẫn": None}
+        self.skills = CLASS_SKILLS[baseclass][:]
         self.map_x, self.map_y = 0, 0
         self.craft_count = 0
         self.treasure_count = 0
@@ -383,12 +426,17 @@ class Hero:
         self.job_unlocked = False
         self.job_changed = False
         self.job_secret = False
+        self.base_class = baseclass
     def show(self, pet=None, daynight="Ngày"):
         show_status(self, pet, daynight)
-        show_ascii(self.char_class if self.char_class != "Nhà phiêu lưu" else "Hero", is_hero=True)
+        show_ascii(self.char_class if self.char_class in ["Kiếm sĩ","Pháp sư","Sát thủ","Cung thủ","Võ sư"] else "Hero", is_hero=True)
         show_map(self)
     def equip(self, item):
         it = ITEM_DATABASE[item]
+        # Kiểm tra class phù hợp khi trang bị vũ khí
+        if it["type"] == "vũ khí" and self.char_class not in it.get("class", []):
+            print(color(f"Class {self.char_class} không thể trang bị {item}!", "red"))
+            return
         self.equipment[it["type"]] = item
         print(color(f"Đã trang bị {item}!", "green"))
     def use_item(self, item):
@@ -427,7 +475,8 @@ def choose_class(hero, ach):
     for k,v in ADVANCED_CLASSES.items():
         if v.get("hidden") and not hero.job_secret:
             continue
-        class_list.append(k)
+        if v["base"] == hero.base_class:
+            class_list.append(k)
     for i, c in enumerate(class_list):
         print(f"{i+1}. {c}")
     while True:
@@ -444,13 +493,13 @@ def choose_class(hero, ach):
             hero.mp = hero.max_mp
             hero.skills = CLASS_SKILLS[cl][:]
             hero.job_changed = True
-            if cl == "Anh hùng bóng tối":
-                ach.add("dark_hero")
+            if stats.get("hidden"):
+                ach.add("secret_class")
             return
         print(color("Chọn lại!", "red"))
 
 def jobchange_event(hero, ach):
-    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối của mình!", "Nghi lễ chuyển sinh", "magenta")
+    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối!", "Nghi lễ chuyển chức", "magenta")
     time.sleep(1.2)
     print(color("Bạn phải chiến đấu với \"Bản Ngã Bóng Tối\"!", "red"))
     enemy_hp = 40 + hero.level * 2
@@ -481,6 +530,7 @@ def jobchange_event(hero, ach):
     if hero_hp > 0:
         print(color("Bạn đã vượt qua thử thách! Năng lượng mới tràn ngập trong bạn...", "green"))
         hidden_class = False
+        # Điều kiện mở class ẩn: đủ 5 kho báu + có pet + có Mảnh phép bí ẩn
         if hero.treasure_count >= 5 and hero.pets and "Mảnh phép bí ẩn" in hero.inventory:
             print(color("Bí ẩn bóng tối trỗi dậy trong bạn... Bạn đã mở khóa class ẩn!", "magenta"))
             hero.job_secret = True
@@ -560,8 +610,6 @@ def shop(hero):
 def random_event(hero, pet, quests, ach, daynight):
     curr = MAP_LAYOUT[hero.map_x][hero.map_y]
     hero.steps += 1
-
-    # Kịch tính hơn: ban đêm xác suất sự kiện nguy hiểm cao, vùng nguy hiểm thì cả ban ngày cũng tăng
     zone_danger = curr in ["Hang động", "Khu rừng cổ", "Núi tuyết", "Lâu đài"]
     night = (daynight=="Đêm")
     event_prob = 40 if night or zone_danger else 22
@@ -658,6 +706,9 @@ def battle(hero, pet, quests, ach, daynight):
         act = input("1. Tấn công  2. Kỹ năng  3. Pet skill  4. Dùng item  5. Chạy: ")
         if act == "1":
             dmg = hero.stats["STR"] + random.randint(0, 2)
+            if hero.equipment.get("vũ khí"):
+                it = ITEM_DATABASE[hero.equipment["vũ khí"]]
+                dmg += it.get("STR",0) + it.get("DEX",0) + it.get("INT",0)
             print(color(f"Bạn tấn công {mobname} gây {dmg} sát thương!", "yellow"))
             mhp -= dmg
         elif act == "2":
@@ -667,37 +718,48 @@ def battle(hero, pet, quests, ach, daynight):
             sidx = input("Chọn kỹ năng: ")
             if sidx.isdigit() and 1 <= int(sidx) <= len(hero.skills):
                 skill = hero.skills[int(sidx)-1]
-                if skill == "Đòn Mạnh":
+                if skill in ["Chém nhanh","Chém xoáy","Thánh kiếm"]:
                     dmg = hero.stats["STR"]*2 + hero.level
                     print(color(f"Bạn dùng {skill} gây {dmg} sát thương!", "red"))
                     mhp -= dmg
-                elif skill == "Quả cầu lửa":
+                elif skill in ["Quả cầu lửa","Lốc xoáy lửa","Thiên hỏa"]:
                     dmg = hero.stats["INT"]*2 + hero.level*2
                     print(color(f"Bạn dùng {skill} gây {dmg} sát thương phép!", "blue"))
                     mhp -= dmg
-                elif skill == "Hồi phục":
+                elif skill in ["Hồi phục","Hồi sinh"]:
                     heal = 12 + hero.stats["INT"]
                     hero.hp = min(hero.max_hp, hero.hp + heal)
                     print(color(f"Bạn hồi phục {heal} HP!", "green"))
-                elif skill == "Khiên chắn":
+                elif skill in ["Phòng ngự","Khiên phép","Kháng phép","Bất khả chiến bại","Hộ thể","Bất khuất"]:
                     print(color("Bạn tăng phòng thủ lượt này!", "cyan"))
-                elif skill == "Đâm lén":
+                elif skill in ["Đâm lén","Cú đâm chí mạng","Đoạt mệnh"]:
                     dmg = hero.stats["STR"] + hero.stats["DEX"] + hero.level
-                    print(color(f"Bạn đâm lén gây {dmg} sát thương!", "magenta"))
+                    print(color(f"Bạn dùng {skill} gây {dmg} sát thương!", "magenta"))
                     mhp -= dmg
-                elif skill == "Tàng hình":
+                elif skill in ["Tàng hình","Ẩn thân","Ẩn thân vô hình"]:
                     print(color("Bạn tránh đòn lượt này!", "cyan"))
-                elif skill == "Bóng tối vĩnh cửu":
-                    dmg = hero.stats["STR"]+hero.stats["INT"]+8
-                    print(color(f"Bạn giải phóng bóng tối gây {dmg} sát thương!", "red"))
+                elif skill in ["Mũi tên thần","Bão tên","Bắn 3 mũi"]:
+                    dmg = hero.stats["DEX"]*2 + hero.level
+                    print(color(f"Bạn dùng {skill} gây {dmg} sát thương tầm xa!", "yellow"))
                     mhp -= dmg
-                elif skill == "Hồi phục bóng tối":
-                    heal = 18 + hero.stats["INT"]
-                    hero.hp = min(hero.max_hp, hero.hp + heal)
-                    print(color(f"Bóng tối hồi phục {heal} HP cho bạn!", "magenta"))
-                elif skill == "Khích lệ":
+                elif skill in ["Bẫy độc","Bẫy dây"]:
+                    print(color("Bạn đặt bẫy, lượt sau quái vật nhận thêm sát thương!", "green"))
+                elif skill in ["Liên hoàn cước","Cú đấm sấm sét","Tuyệt kỹ quyền vương"]:
+                    dmg = hero.stats["STR"]*2 + hero.stats["DEX"] + hero.level
+                    print(color(f"Bạn tung {skill} gây {dmg} sát thương!", "red"))
+                    mhp -= dmg
+                elif skill in ["Khích lệ"]:
                     hero.hp = min(hero.max_hp, hero.hp + 10)
                     print(color("Bạn hồi phục 10 HP!", "green"))
+                elif skill in ["Ảo ảnh"]:
+                    print(color("Tạo ra ảo ảnh, giảm sát thương nhận vào!", "cyan"))
+                elif skill in ["Kiếm khí"]:
+                    dmg = hero.stats["STR"] + hero.stats["DEX"] + 3
+                    print(color(f"Bạn dùng {skill} gây {dmg} sát thương!", "yellow"))
+                    mhp -= dmg
+                elif skill in ["Cường hóa"]:
+                    hero.stats["STR"] += 2
+                    print(color("Sức mạnh tạm thời tăng lên!", "magenta"))
         elif act == "3" and pet:
             pet.use_skill()
             mhp -= pet.atk + 2
@@ -714,7 +776,7 @@ def battle(hero, pet, quests, ach, daynight):
             hero.hp -= mobdmg
             print(color(f"{mobname} tấn công bạn gây {mobdmg} sát thương!", "red"))
     if hero.hp <= 0:
-        if hero.char_class == "Anh hùng bóng tối":
+        if hero.char_class in ["Kiếm thánh","Pháp thần","Bóng ma","Thợ săn huyền thoại","Quyền vương"]:
             show_cutscene("ending_secret")
         else:
             show_cutscene("ending_bad")
@@ -730,7 +792,7 @@ def battle(hero, pet, quests, ach, daynight):
         quests.on_kill(mobname, curr)
         if mobname == "Dark Lord":
             ach.add("boss_final")
-            if hero.char_class == "Anh hùng bóng tối":
+            if hero.char_class in ["Kiếm thánh","Pháp thần","Bóng ma","Thợ săn huyền thoại","Quyền vương"]:
                 show_cutscene("ending_secret")
             else:
                 show_cutscene("ending_good")
@@ -810,8 +872,18 @@ def main():
     while True:
         choice = main_menu()
         if choice == "new":
-            name = input("Đặt tên cho Nhà phiêu lưu của bạn: ")
-            hero = Hero(name)
+            print(color("Chọn class khởi đầu:", "cyan"))
+            base_list = list(BASE_CLASSES.keys())
+            for i, c in enumerate(base_list):
+                print(f"{i+1}. {c}")
+            while True:
+                base_idx = input("Nhập số class: ")
+                if base_idx.isdigit() and 1 <= int(base_idx) <= len(base_list):
+                    baseclass = base_list[int(base_idx)-1]
+                    break
+                print(color("Chọn lại!", "red"))
+            name = input("Đặt tên cho nhân vật: ")
+            hero = Hero(name, baseclass)
             pet = None
             quests = QuestSystem()
             ach = set()
