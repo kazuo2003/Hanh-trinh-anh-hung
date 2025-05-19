@@ -9,6 +9,7 @@ try:
     from rich import box
     RICH = True
     console = Console()
+
 except:
     RICH = False
 
@@ -29,7 +30,9 @@ except:
 MAP_LAYOUT = [
     ["Làng",      "Rừng",     "Hang động"],
     ["Thành phố", "Đồng cỏ",  "Núi tuyết"],
-    ["Bờ biển",   "Khu rừng cổ", "Lâu đài"]
+    ["Bờ biển",   "Khu rừng cổ", "Lâu đài"],
+    ["Sa mạc lửa",  "Đảo băng",  "Tháp cổ"],
+    ["Địa Ngục"],
 ]
 MAP_DESC = {
     "Làng": "Nơi khởi đầu hành trình, bình yên & an toàn.",
@@ -40,12 +43,17 @@ MAP_DESC = {
     "Núi tuyết": "Lạnh giá, có quái vật băng giá và boss phụ.",
     "Bờ biển": "Thương nhân, kho báu, nguy hiểm ban đêm.",
     "Khu rừng cổ": "Rất nguy hiểm, nhiều bí ẩn, boss ẩn.",
-    "Lâu đài": "Nơi cuối cùng, boss mạnh nhất cư ngụ. Chỉ mở khi đủ điều kiện."
+    "Lâu đài": "Nơi cuối cùng, boss mạnh nhất cư ngụ. Chỉ mở khi đủ điều kiện.",
+    "Sa mạc lửa": "Nóng bỏng, quái lửa, boss Rồng Lửa, nhiều bí ẩn cổ đại.",
+    "Đảo băng": "Lạnh giá cực độ, boss Hổ Băng, nguy hiểm vào ban đêm.",
+    "Tháp cổ": "Tháp bị nguyền rủa, boss Pháp sư cổ đại, nhiều bẫy và kho báu.",
+    "Địa ngục": "Nơi nguy hiểm nhất, chỉ mở khi đủ điều kiện, boss cuối thực sự.",
 }
 AREA_LEVEL_HINT = {
     "Làng": (1, 2), "Rừng": (2, 3), "Hang động": (3, 5), "Thành phố": (2, 4),
-    "Đồng cỏ": (2, 4), "Núi tuyết": (5, 7), "Bờ biển": (2, 5),
-    "Khu rừng cổ": (7, 8), "Lâu đài": (8, 99)
+    "Đồng cỏ": (2, 4), "Bờ biển": (2, 5), "Núi tuyết": (5, 7), 
+    "Sa mạc lửa": (7, 10), "Khu rừng cổ": (7, 8), "Lâu đài": (8, 99), 
+    "Đảo băng": (8, 12), "Tháp cổ": (10, 14), "Địa ngục": (15, 99),
 }
 
 BASE_CLASSES = {
@@ -89,6 +97,80 @@ CLASS_SKILLS = {
     "Quyền vương": ["Tuyệt kỹ quyền vương", "Cường hóa"],
 }
 
+SKILL_TREE = {
+    "Vô nghề": {
+        "Tập luyện": {"level": 1, "desc": "Tăng nhẹ chỉ số ngẫu nhiên.", "next": None},
+    },
+    "Kiếm sĩ": {
+        "Chém nhanh": {"level": 1, "desc": "Tấn công nhanh, sát thương nhỏ.", "next": "Chém xoáy"},
+        "Chém xoáy": {"level": 3, "desc": "Tấn công nhiều mục tiêu.", "next": "Phòng ngự"},
+        "Phòng ngự": {"level": 5, "desc": "Tăng phòng thủ lượt này.", "next": "Thánh kiếm"},
+        "Thánh kiếm": {"level": 8, "desc": "Tuyệt kỹ mạnh nhất.", "next": None},
+    },
+    "Pháp sư": {
+        "Quả cầu lửa": {"level": 1, "desc": "Gây sát thương phép lửa.", "next": "Khiên phép"},
+        "Khiên phép": {"level": 2, "desc": "Tạo khiên bảo vệ bản thân.", "next": "Lốc xoáy lửa"},
+        "Lốc xoáy lửa": {"level": 4, "desc": "Sát thương diện rộng.", "next": "Thiên hỏa"},
+        "Thiên hỏa": {"level": 8, "desc": "Chiêu thức cực mạnh.", "next": None},
+    },
+    "Sát thủ": {
+        "Đâm lén": {"level": 1, "desc": "Tấn công chí mạng.", "next": "Tàng hình"},
+        "Tàng hình": {"level": 2, "desc": "Tránh đòn lượt sau.", "next": "Cú đâm chí mạng"},
+        "Cú đâm chí mạng": {"level": 5, "desc": "Sát thương cực lớn lên mục tiêu yếu máu.", "next": None},
+    },
+    "Cung thủ": {
+        "Bắn 3 mũi": {"level": 1, "desc": "Bắn nhiều mũi tên cùng lúc.", "next": "Bẫy dây"},
+        "Bẫy dây": {"level": 3, "desc": "Đặt bẫy, giảm tốc quái.", "next": "Bão tên"},
+        "Bão tên": {"level": 6, "desc": "Tấn công diện rộng.", "next": None},
+    },
+    "Võ sư": {
+        "Liên hoàn cước": {"level": 1, "desc": "Đá liên tiếp.", "next": "Hộ thể"},
+        "Hộ thể": {"level": 2, "desc": "Tăng phòng thủ tạm thời.", "next": "Cú đấm sấm sét"},
+        "Cú đấm sấm sét": {"level": 6, "desc": "Sát thương mạnh, có thể làm choáng.", "next": None},
+    },
+    "Kiếm khách": {
+        "Chém xoáy": {"level": 1, "desc": "Kỹ năng nâng cao của kiếm.", "next": "Kiếm khí"},
+        "Kiếm khí": {"level": 4, "desc": "Tấn công xuyên giáp.", "next": None},
+    },
+    "Pháp sư cấp cao": {
+        "Lốc xoáy lửa": {"level": 1, "desc": "Sát thương phép diện rộng.", "next": "Kháng phép"},
+        "Kháng phép": {"level": 5, "desc": "Giảm sát thương phép nhận vào.", "next": None},
+    },
+    "Sát thủ bóng đêm": {
+        "Cú đâm chí mạng": {"level": 1, "desc": "Tăng mạnh sát thương chí mạng.", "next": "Ẩn thân"},
+        "Ẩn thân": {"level": 4, "desc": "Tránh toàn bộ đòn 1 lượt.", "next": None},
+    },
+    "Xạ thủ": {
+        "Bão tên": {"level": 1, "desc": "Tấn công diện rộng.", "next": "Bẫy độc"},
+        "Bẫy độc": {"level": 5, "desc": "Bẫy gây độc cho đối thủ.", "next": None},
+    },
+    "Võ tướng": {
+        "Cú đấm sấm sét": {"level": 1, "desc": "Đánh choáng diện rộng.", "next": "Bất khuất"},
+        "Bất khuất": {"level": 4, "desc": "Miễn nhiễm sát thương 1 lượt.", "next": None},
+    },
+    "Kiếm thánh": {
+        "Thánh kiếm": {"level": 1, "desc": "Chiêu kiếm tối thượng.", "next": "Bất khả chiến bại"},
+        "Bất khả chiến bại": {"level": 8, "desc": "Không thể bị hạ gục 1 lần.", "next": None},
+    },
+    "Pháp thần": {
+        "Thiên hỏa": {"level": 1, "desc": "Thiên thạch cực mạnh.", "next": "Hồi sinh"},
+        "Hồi sinh": {"level": 8, "desc": "Hồi sinh khi tử trận.", "next": None},
+    },
+    "Bóng ma": {
+        "Ảo ảnh": {"level": 1, "desc": "Giảm sát thương nhận vào.", "next": "Đoạt mệnh"},
+        "Đoạt mệnh": {"level": 8, "desc": "Tấn công hút máu.", "next": None},
+    },
+    "Thợ săn huyền thoại": {
+        "Mũi tên thần": {"level": 1, "desc": "Mũi tên sát thương cực mạnh.", "next": "Ẩn thân vô hình"},
+        "Ẩn thân vô hình": {"level": 5, "desc": "Vô hình 2 lượt.", "next": None},
+    },
+    "Quyền vương": {
+        "Tuyệt kỹ quyền vương": {"level": 1, "desc": "Sát thương diện rộng cực mạnh.", "next": "Cường hóa"},
+        "Cường hóa": {"level": 7, "desc": "Tăng mạnh chỉ số bản thân.", "next": None},
+    },
+}
+
+
 ITEM_DATABASE = {
     "Kiếm sắt": {"type": "vũ khí", "STR": 2, "desc": "Tăng 2 sức mạnh (Kiếm sĩ/Kiếm khách/Kiếm thánh)", "quality": "thường", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
     "Gậy phép": {"type": "vũ khí", "INT": 3, "desc": "Tăng 3 trí tuệ (Pháp sư)", "quality": "thường", "class": ["Pháp sư","Pháp sư cấp cao","Pháp thần"]},
@@ -101,7 +183,14 @@ ITEM_DATABASE = {
     "Nhẫn may mắn": {"type": "nhẫn", "LUCK": 2, "desc": "Tăng 2 may mắn", "quality": "hiếm"},
     "Thuốc máu": {"type": "thuốc", "HP": 20, "desc": "Hồi phục 20 HP"},
     "Thuốc mana": {"type": "thuốc", "MP": 15, "desc": "Hồi phục 15 MP"},
-    "Mảnh phép bí ẩn": {"type": "chế", "desc": "Dùng để chế tạo vật phẩm cực mạnh", "quality": "siêu hiếm"}
+    "Mảnh phép bí ẩn": {"type": "chế", "desc": "Dùng để chế tạo vật phẩm cực mạnh", "quality": "siêu hiếm"},
+    "Kiếm Rồng Lửa": {"type": "vũ khí", "STR": 12, "desc": "Vũ khí truyền thuyết, chỉ dành cho Kiếm thánh/Quyền vương. Kèm hiệu ứng đốt cháy.", "quality": "truyền thuyết", "class": ["Kiếm thánh", "Quyền vương"]},
+    "Vuốt Băng Truyền Thuyết": {"type": "vũ khí", "DEX": 10, "desc": "Vũ khí truyền thuyết tăng DEX, có thể đóng băng kẻ địch.", "quality": "truyền thuyết", "class": ["Sát thủ bóng đêm", "Thợ săn huyền thoại"]},
+    "Trượng Cổ Truyền": {"type": "vũ khí", "INT": 15, "desc": "Trượng pháp sư truyền thuyết, tăng INT, mở khóa kỹ năng cổ đại.", "quality": "truyền thuyết", "class": ["Pháp thần"]},
+    "Vương Miện Địa Ngục": {"type": "nhẫn", "LUCK": 8, "desc": "Tăng vận may cực mạnh, chỉ rơi ra từ boss cuối Địa ngục.", "quality": "truyền thuyết"},
+    "Nhẫn Lửa Truyền Thuyết": {"type": "nhẫn", "LUCK": 5, "desc": "Nhẫn truyền thuyết, tăng may mắn và kháng lửa.", "quality": "truyền thuyết"},
+    "Áo Choàng Băng": {"type": "áo giáp", "VIT": 8, "desc": "Áo choàng truyền thuyết, tăng VIT, kháng băng.", "quality": "truyền thuyết"},
+    "Kiếm Địa Ngục": {"type": "vũ khí", "STR": 20, "desc": "Kiếm mạnh nhất, chỉ dành cho class ẩn, có hiệu ứng đặc biệt.", "quality": "truyền thuyết", "class": ["Bóng ma", "Quyền vương"]},
 }
 
 MONSTER_DATABASE = {
@@ -109,13 +198,22 @@ MONSTER_DATABASE = {
     "Goblin": {"HP": 22, "MP": 2, "STR": 4, "DEX": 3, "VIT": 3, "EXP": 12, "Gold": 7, "drops": ["Kiếm sắt", "Thuốc máu"]},
     "Drake": {"HP": 36, "MP": 0, "STR": 7, "DEX": 5, "VIT": 5, "EXP": 25, "Gold": 15, "drops": ["Cung gỗ", "Nhẫn may mắn"]},
     "Yeti": {"HP": 45, "MP": 0, "STR": 8, "DEX": 3, "VIT": 8, "EXP": 35, "Gold": 21, "drops": ["Áo giáp nhẹ", "Thuốc máu"]},
-    "Dark Lord": {"HP": 110, "MP": 35, "STR": 18, "DEX": 9, "VIT": 13, "EXP": 140, "Gold": 100, "drops": ["Mảnh phép bí ẩn"]}
+    "Dark Lord": {"HP": 110, "MP": 35, "STR": 18, "DEX": 9, "VIT": 13, "EXP": 140, "Gold": 100, "drops": ["Mảnh phép bí ẩn"]},
+    "Rồng Lửa": {"HP": 140, "MP": 40, "STR": 24, "DEX": 14, "VIT": 16, "EXP": 250, "Gold": 250, "drops": ["Kiếm Rồng Lửa", "Pet Rồng Lửa", "Nhẫn Lửa Truyền Thuyết"]},
+    "Hổ Băng":  {"HP": 120, "MP": 30, "STR": 20, "DEX": 18, "VIT": 15, "EXP": 210, "Gold": 200, "drops": ["Vuốt Băng Truyền Thuyết", "Pet Hổ Băng", "Áo Choàng Băng"]},
+    "Pháp sư cổ đại": {"HP": 160, "MP": 80, "STR": 10, "DEX": 10, "VIT": 20, "INT": 30, "EXP": 340, "Gold": 350, "drops": ["Trượng Cổ Truyền", "Nhẫn Pháp Sư Truyền Thuyết"]},
+    "Quỷ vương": {"HP": 300, "MP": 120, "STR": 32, "DEX": 18, "VIT": 30, "INT": 24, "EXP": 999, "Gold": 999, "drops": ["Pet Quỷ Vương", "Vương Miện Địa Ngục", "Kiếm Địa Ngục"]},
+    "Salamander": {"HP": 42, "MP": 5, "STR": 11, "DEX": 7, "VIT": 7, "EXP": 38, "Gold": 18, "drops": ["Thuốc máu", "Nhẫn Lửa"]},
+    "Băng Hồn": {"HP": 38, "MP": 8, "STR": 9, "DEX": 13, "VIT": 7, "EXP": 33, "Gold": 19, "drops": ["Thuốc mana", "Nhẫn Băng"]},
 }
 
 PET_DATABASE = {
     "Slime": {"hp": 24, "atk": 4, "skill": "Múc dính"},
     "Drake": {"hp": 40, "atk": 8, "skill": "Lửa phun"},
-    "Yeti": {"hp": 50, "atk": 12, "skill": "Gầm băng giá"}
+    "Yeti": {"hp": 50, "atk": 12, "skill": "Gầm băng giá"},
+    "Rồng Lửa": {"hp": 85, "atk": 22, "skill": "Hỏa Long Trảo"},
+    "Hổ Băng": {"hp": 70, "atk": 19, "skill": "Băng Sát"},
+    "Quỷ Vương": {"hp": 110, "atk": 35, "skill": "Địa Ngục Hủy Diệt"},
 }
 
 QUEST_DATABASE = [
@@ -463,6 +561,8 @@ class Hero:
         self.level = 1
         self.exp = 0
         self.gold = 20
+        self.skill_points = 0
+        self.unlocked_skills = []
         self.stats = dict(base)
         self.max_hp = base["HP"]
         self.hp = self.max_hp
@@ -480,6 +580,7 @@ class Hero:
         self.job_changed = False
         self.job_secret = False
         self.base_class = baseclass
+        self.sub_class = None
 
     def show(self, pet=None, daynight="Ngày"):
         show_status(self, pet, daynight)
@@ -514,6 +615,7 @@ class Hero:
         while self.exp >= 30 + self.level * 10:
             self.exp -= 30 + self.level * 10
             self.level += 1
+            self.skill_points += 1
             self.max_hp += 5
             self.max_mp += 2
             print(color(f"🌟 LÊN CẤP! {self.level}", "yellow"))
@@ -521,6 +623,52 @@ class Hero:
         if up:
             self.hp = self.max_hp
             self.mp = self.max_mp
+        if self.level >= 30 and self.sub_class is None:
+         print("Bạn đã đủ điều kiện chọn nghề phụ (multi-class)!")
+         choose_subclass(self)
+
+def rebirth(hero):
+    print("Bạn đã chuyển sinh! Bắt đầu lại với một phần sức mạnh cũ.")
+    keep_skills = []
+    if hero.unlocked_skills:
+        print("Các kỹ năng bạn đã học: ", hero.unlocked_skills)
+        n = min(2, len(hero.unlocked_skills))  # Cho giữ lại tối đa 2 kỹ năng
+        for i in range(n):
+            print(f"Chọn kỹ năng giữ lại số {i+1}:")
+            for j, sk in enumerate(hero.unlocked_skills,1):
+                print(f"{j}. {sk}")
+            idx = input("Nhập số kỹ năng muốn giữ: ")
+            if idx.isdigit() and 1 <= int(idx) <= len(hero.unlocked_skills):
+                keep_skills.append(hero.unlocked_skills[int(idx)-1])
+                hero.unlocked_skills.pop(int(idx)-1)
+    name = hero.name
+    baseclass = hero.char_class
+    # Tạo lại hero (có thể cho chọn lại nghề chính nếu muốn)
+    new_hero = Hero(name, baseclass)
+    new_hero.unlocked_skills = keep_skills
+    new_hero.skills = keep_skills[:]
+    new_hero.skill_points = 0
+    print("Chuyển sinh thành công! Bạn giữ lại kỹ năng hiếm:", keep_skills)
+    return new_hero
+
+def upgrade_skill(hero):
+    skills = SKILL_TREE.get(hero.char_class, {})
+    available = [s for s, v in skills.items() if hero.level >= v["level"] and s not in hero.unlocked_skills]
+    if not available:
+        print("Không có kỹ năng mới để học.")
+        return
+    print("Kỹ năng có thể học:")
+    for i, s in enumerate(available, 1):
+        print(f"{i}. {s} ({skills[s]['desc']})")
+    idx = input("Chọn kỹ năng số: ")
+    if idx.isdigit() and 1 <= int(idx) <= len(available):
+        skill = available[int(idx)-1]
+        hero.unlocked_skills.append(skill)
+        hero.skill_points -= 1
+        hero.skills.append(skill)  # Nếu bạn muốn dùng kỹ năng này trong combat
+        print(f"Đã học kỹ năng {skill}.")
+    else:
+        print("Chọn sai!")
 
 def choose_class(hero, ach):
     print(color("Chọn class chuyển chức:", "cyan"))
@@ -642,6 +790,49 @@ class QuestSystem:
                 rich_panel(f"✅ Hoàn thành nhiệm vụ: {q['name']}!", "Nhiệm vụ", "yellow")
     def show(self):
         show_quest_progress(self.quests)
+    def __init__(self):
+        super().__init__()
+        self.daily_quests = []
+        self.last_daily = None
+
+    def gen_daily_quests(self):
+        # Tạo nhiệm vụ ngày mới mỗi ngày
+        today = datetime.date.today()
+        if self.last_daily != today:
+            self.daily_quests = [
+                {"id": 100+random.randint(1,999), "name": "Nhiệm vụ ngày: Đánh bại 3 quái", "desc": "Đánh bại 3 quái bất kỳ.", "requirements": {"kill_any": 3}, "reward_exp": 25, "reward_gold": 15, "completed": False}
+            ]
+            self.last_daily = today
+
+    def on_kill(self, mob, place):
+        super().on_kill(mob, place)
+        # Xử lý nhiệm vụ ngày
+        self.gen_daily_quests()
+        for q in self.daily_quests:
+            if q["completed"]: continue
+            if "kill_any" in q["requirements"]:
+                q.setdefault("progress", 0)
+                q["progress"] += 1
+                if q["progress"] >= q["requirements"]["kill_any"]:
+                    q["completed"] = True
+                    rich_panel(f"✅ Hoàn thành nhiệm vụ ngày: {q['name']}!", "Nhiệm vụ ngày", "yellow")
+
+    def show(self):
+        super().show()
+        self.gen_daily_quests()
+        if self.daily_quests:
+            print("=== NHIỆM VỤ NGÀY ===")
+            for q in self.daily_quests:
+                st = "[X]" if q["completed"] else "[ ]"
+                print(f"{st} {q['name']}: {q['desc']}")
+
+# Hệ thống nhiệm vụ ngẫu nhiên từ NPC
+def random_side_quest():
+    quests = [
+        {"name": "Thu thập thảo dược", "desc": "Nhặt 2 vật phẩm bất kỳ ở đồng cỏ.", "requirements": {"gather": 2}, "reward_exp": 15, "reward_gold": 10, "completed": False},
+        {"name": "Giao hàng", "desc": "Mang 1 món đồ đến Thành phố.", "requirements": {"deliver": 1}, "reward_exp": 20, "reward_gold": 12, "completed": False},
+    ]
+    return random.choice(quests)
 
 def shop(hero):
     print(color("Cửa hàng:", "cyan"))
@@ -955,7 +1146,7 @@ def main():
         clear_screen()
         daynight = get_daynight()
         hero.show(pet, daynight)
-        print(color("\n1. Di chuyển  2. Đánh quái  3. Pet  4. Túi đồ  5. Nhiệm vụ  6. Cửa hàng  7. Chế tạo  8. Thành tựu  9. Lưu game  0. Thoát", "yellow"))
+        print(color("\n1. Di chuyển  2. Đánh quái  3. Pet  4. Túi đồ  5. Nhiệm vụ  6. Cửa hàng  7. Chế tạo  8. Thành tựu  9. Lưu game  10. Nâng kỹ năng  0. Thoát", "yellow"))
         # Điều kiện chuyển nghề khi đủ level và chưa chuyển
         if hero.char_class == "Vô nghề" and (hero.level >= 20 or (hero.treasure_count >= 5 and hero.pets and "Mảnh phép bí ẩn" in hero.inventory)):
             print(color("!! Bạn đã đủ điều kiện chuyển nghề! Hãy đi đến Làng để kích hoạt nghi lễ chuyển sinh và chọn class.", "magenta"))
@@ -1006,6 +1197,12 @@ def main():
         elif act == "9":
             save_game(hero, pet, quests, ach)
             wait_enter()
+        elif act == "10":
+         if hero.skill_points > 0:
+            upgrade_skill(hero)
+         else:
+          print("Bạn không còn điểm kỹ năng.")
+         wait_enter()
         elif act == "0":
             print(color("Tạm biệt! Lưu lại hành trình nhé!", "magenta"))
             sys.exit()
