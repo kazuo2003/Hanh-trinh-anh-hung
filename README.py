@@ -194,7 +194,7 @@ ITEM_DATABASE = {
 }
 
 MONSTER_DATABASE = {
-    "Slime": {"HP": 18, "MP": 0, "STR": 3, "DEX": 2, "VIT": 2, "EXP": 8, "Gold": 5, "drops": ["Thuốc máu"]},
+    "Slime": {"HP": 10, "MP": 0, "STR": 2, "DEX": 0, "VIT": 0, "EXP": 8, "Gold": 5, "drops": ["Thuốc máu"]},
     "Goblin": {"HP": 22, "MP": 2, "STR": 4, "DEX": 3, "VIT": 3, "EXP": 12, "Gold": 7, "drops": ["Kiếm sắt", "Thuốc máu"]},
     "Drake": {"HP": 36, "MP": 0, "STR": 7, "DEX": 5, "VIT": 5, "EXP": 25, "Gold": 15, "drops": ["Cung gỗ", "Nhẫn may mắn"]},
     "Yeti": {"HP": 45, "MP": 0, "STR": 8, "DEX": 3, "VIT": 8, "EXP": 35, "Gold": 21, "drops": ["Áo giáp nhẹ", "Thuốc máu"]},
