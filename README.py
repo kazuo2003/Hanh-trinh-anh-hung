@@ -207,6 +207,22 @@ MONSTER_DATABASE = {
     "Băng Hồn": {"HP": 38, "MP": 8, "STR": 9, "DEX": 13, "VIT": 7, "EXP": 33, "Gold": 19, "drops": ["Thuốc mana", "Nhẫn Băng"]},
 }
 
+AREA_MONSTERS = {
+    "Làng": ["Slime"],
+    "Rừng": ["Slime", "Goblin"],
+    "Hang động": ["Goblin", "Drake"],
+    "Thành phố": ["Goblin"],
+    "Đồng cỏ": ["Slime", "Goblin"],
+    "Núi tuyết": ["Yeti"],
+    "Bờ biển": ["Drake"],
+    "Khu rừng cổ": ["Drake"],
+    "Lâu đài": ["Dark Lord"],
+    "Sa mạc lửa": ["Salamander"],
+    "Đảo băng": ["Băng Hồn", "Yeti"],
+    "Tháp cổ": ["Pháp sư cổ đại"],
+    "Địa Ngục": ["Quỷ vương"],
+}
+
 PET_DATABASE = {
     "Slime": {"hp": 24, "atk": 4, "skill": "Múc dính"},
     "Drake": {"hp": 40, "atk": 8, "skill": "Lửa phun"},
@@ -930,17 +946,21 @@ def mini_game(hero):
 
 def battle(hero, pet, quests, ach, daynight):
     curr = MAP_LAYOUT[hero.map_x][hero.map_y]
-    if curr == "Lâu đài" and hero.level < 6:
-        print(color("Bạn chưa đủ mạnh để vào Lâu đài!", "red"))
-        return
-    if curr == "Lâu đài":
-        mobname = "Dark Lord"
-    elif curr == "Khu rừng cổ" and random.randint(1, 100) < 50:
-        mobname = "Drake"
-    elif curr == "Núi tuyết" and random.randint(1, 100) < 40:
-        mobname = "Yeti"
-    else:
-        mobname = random.choice(list(MONSTER_DATABASE.keys()))
+    area = curr
+
+    # Lọc danh sách quái vật theo vùng
+    candidates = AREA_MONSTERS.get(area, ["Slime"])
+    # Lọc thêm theo level nếu muốn
+    minlv, maxlv = AREA_LEVEL_HINT.get(area, (1, 99))
+    suitable = []
+    for m in candidates:
+        # Nếu là boss thì chỉ cho gặp khi level đủ lớn
+        if m in ["Dark Lord", "Quỷ vương", "Pháp sư cổ đại", "Rồng Lửa", "Hổ Băng"] and hero.level < minlv:
+            continue
+        suitable.append(m)
+    if not suitable:
+        suitable = ["Slime"]
+    mobname = random.choice(suitable)
     mob = dict(MONSTER_DATABASE[mobname])
     print(color(f"Gặp {mobname}!", "red"))
     show_ascii(mobname)
