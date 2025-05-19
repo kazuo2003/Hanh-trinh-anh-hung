@@ -42,6 +42,11 @@ MAP_DESC = {
     "Khu rừng cổ": "Rất nguy hiểm, nhiều bí ẩn, boss ẩn.",
     "Lâu đài": "Nơi cuối cùng, boss mạnh nhất cư ngụ. Chỉ mở khi đủ điều kiện."
 }
+AREA_LEVEL_HINT = {
+    "Làng": (1, 2), "Rừng": (2, 3), "Hang động": (3, 5), "Thành phố": (2, 4),
+    "Đồng cỏ": (2, 4), "Núi tuyết": (5, 7), "Bờ biển": (2, 5),
+    "Khu rừng cổ": (7, 8), "Lâu đài": (8, 99)
+}
 
 BASE_CLASSES = {
     "Kiếm sĩ":   {"STR": 6, "DEX": 4, "VIT": 5, "INT": 2, "LUCK": 3, "HP": 32, "MP": 10},
@@ -52,13 +57,11 @@ BASE_CLASSES = {
 }
 
 ADVANCED_CLASSES = {
-    # Class nâng cao công khai
     "Kiếm khách":    {"STR": 10, "DEX": 5, "VIT": 9, "INT": 3, "LUCK": 4, "HP": 42, "MP": 14, "base": "Kiếm sĩ"},
     "Pháp sư cấp cao":{"STR": 3, "DEX": 4, "VIT": 5, "INT": 13, "LUCK": 4, "HP": 25, "MP": 38, "base": "Pháp sư"},
     "Sát thủ bóng đêm":{"STR": 7, "DEX": 12, "VIT": 6, "INT": 3, "LUCK": 7, "HP": 30, "MP": 19, "base": "Sát thủ"},
     "Xạ thủ":        {"STR": 6, "DEX": 12, "VIT": 6, "INT": 4, "LUCK": 7, "HP": 28, "MP": 16, "base": "Cung thủ"},
     "Võ tướng":      {"STR": 12, "DEX": 7, "VIT": 10, "INT": 3, "LUCK": 4, "HP": 44, "MP": 12, "base": "Võ sư"},
-    # Class ẩn cực mạnh (ẩn khi chưa đủ điều kiện)
     "Kiếm thánh":    {"STR": 15, "DEX": 7, "VIT": 12, "INT": 5, "LUCK": 7, "HP": 55, "MP": 22, "base": "Kiếm sĩ", "hidden": True},
     "Pháp thần":     {"STR": 4, "DEX": 6, "VIT": 7, "INT": 20, "LUCK": 7, "HP": 32, "MP": 60, "base": "Pháp sư", "hidden": True},
     "Bóng ma":       {"STR": 10, "DEX": 18, "VIT": 8, "INT": 5, "LUCK": 10, "HP": 36, "MP": 30, "base": "Sát thủ", "hidden": True},
@@ -77,7 +80,6 @@ CLASS_SKILLS = {
     "Sát thủ bóng đêm": ["Cú đâm chí mạng", "Ẩn thân"],
     "Xạ thủ": ["Bão tên", "Bẫy độc"],
     "Võ tướng": ["Cú đấm sấm sét", "Bất khuất"],
-    # Class ẩn
     "Kiếm thánh": ["Thánh kiếm", "Bất khả chiến bại"],
     "Pháp thần": ["Thiên hỏa", "Hồi sinh"],
     "Bóng ma": ["Ảo ảnh", "Đoạt mệnh"],
@@ -86,16 +88,13 @@ CLASS_SKILLS = {
 }
 
 ITEM_DATABASE = {
-    # Vũ khí cho các class
     "Kiếm sắt": {"type": "vũ khí", "STR": 2, "desc": "Tăng 2 sức mạnh (Kiếm sĩ/Kiếm khách)", "quality": "thường", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
     "Gậy phép": {"type": "vũ khí", "INT": 3, "desc": "Tăng 3 trí tuệ (Pháp sư)", "quality": "thường", "class": ["Pháp sư","Pháp sư cấp cao","Pháp thần"]},
     "Dao găm": {"type": "vũ khí", "DEX": 2, "desc": "Tăng 2 nhanh nhẹn (Sát thủ)", "quality": "thường", "class": ["Sát thủ","Sát thủ bóng đêm","Bóng ma"]},
     "Cung gỗ": {"type": "vũ khí", "DEX": 2, "desc": "Tăng 2 nhanh nhẹn (Cung thủ)", "quality": "thường", "class": ["Cung thủ", "Xạ thủ", "Thợ săn huyền thoại"]},
     "Găng tập": {"type": "vũ khí", "STR": 1, "DEX": 1, "desc": "Tăng 1 sức mạnh, 1 nhanh nhẹn (Võ sư)", "quality": "thường", "class": ["Võ sư","Võ tướng","Quyền vương"]},
-    # Vũ khí truyền thuyết
     "Kiếm truyền thuyết": {"type": "vũ khí", "STR": 6, "desc": "Vũ khí cực mạnh! (Kiếm sĩ/Kiếm khách/Kiếm thánh)", "quality": "siêu hiếm", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
     "Trượng cổ đại": {"type": "vũ khí", "INT": 8, "desc": "Tăng 8 INT cho pháp sư", "quality": "hiếm", "class": ["Pháp sư","Pháp sư cấp cao","Pháp thần"]},
-    # Trang bị chung
     "Áo giáp nhẹ": {"type": "áo giáp", "VIT": 2, "desc": "Tăng 2 thể chất", "quality": "thường"},
     "Nhẫn may mắn": {"type": "nhẫn", "LUCK": 2, "desc": "Tăng 2 may mắn", "quality": "hiếm"},
     "Thuốc máu": {"type": "thuốc", "HP": 20, "desc": "Hồi phục 20 HP"},
@@ -169,6 +168,16 @@ EVENTS = [
     {"name": "bay", "desc": "Bạn dính bẫy! Mất máu!", "reward": "trap"},
     {"name": "npc_an", "desc": "Bạn gặp NPC bí ẩn, nhận lời khuyên hoặc quà tặng.", "reward": "npc_an"},
     {"name": "nghi_le_chuyen_sinh", "desc": "Nghi lễ chuyển chức bắt đầu! Một thử thách sinh tử đang chờ bạn...", "reward": "jobchange"}
+]
+PLOT_TWISTS = [
+    "Thật ra Dark Lord từng là một anh hùng thất bại.",
+    "Có thể thuần hóa Yeti làm pet nếu bạn may mắn.",
+    "Nếu đủ kho báu + có Mảnh phép bí ẩn, bạn sẽ mở khóa class ẩn!"
+]
+MAIN_STORY = [
+    "Bạn là người được chọn để cứu lấy thế giới khỏi bóng tối.",
+    "Nhiều anh hùng đã thất bại trước khi bạn đến.",
+    "Liệu bạn có thể phá vỡ vận mệnh, trở thành huyền thoại chăng?"
 ]
 
 # ==== UI & TOOL ==== #
@@ -275,7 +284,11 @@ def show_map(hero):
             cells = []
             for j, loc in enumerate(row):
                 marker = "[*]" if hero.map_x == i and hero.map_y == j else "   "
-                cell = f"{marker} {loc}" if loc else ""
+                lv = ""
+                if loc:
+                    lvmin, lvmax = AREA_LEVEL_HINT.get(loc, (1, 1))
+                    lv = f"(Lv {lvmin}-{lvmax})"
+                cell = f"{marker} {loc} {lv}" if loc else ""
                 cells.append(cell)
             table.add_row(*cells)
         console.print(Align.center(table))
@@ -285,10 +298,15 @@ def show_map(hero):
             for j, loc in enumerate(row):
                 if not loc: continue
                 marker = "[*]" if hero.map_x == i and hero.map_y == j else "   "
-                print(f"{marker} {loc}", end="\t")
+                lvmin, lvmax = AREA_LEVEL_HINT.get(loc, (1, 1))
+                lv = f"(Lv {lvmin}-{lvmax})"
+                print(f"{marker} {loc} {lv}", end="\t")
             print()
     loc = MAP_LAYOUT[hero.map_x][hero.map_y]
-    print(color(f"Địa điểm: {loc} - {MAP_DESC[loc]}", "yellow"))
+    lvmin, lvmax = AREA_LEVEL_HINT.get(loc, (1, 1))
+    print(color(f"Địa điểm: {loc} (Lv {lvmin}-{lvmax}) - {MAP_DESC[loc]}", "yellow"))
+    if hasattr(hero, "level") and hero.level < lvmin:
+        print(color(f"Cảnh báo: Khu vực này đề xuất level từ {lvmin}. Bạn nên cẩn thận!", "red"))
 
 def show_quest_progress(quests):
     if RICH:
@@ -311,6 +329,8 @@ def main_menu():
         options = [
             ("🌟 Bắt đầu game mới", "new"),
             ("💾 Tiếp tục game", "continue"),
+            ("📖 Đọc cốt truyện", "lore"),
+            ("🌀 Plot twist/lore ẩn", "twist"),
             ("📝 Credits", "credit"),
             ("❌ Thoát", "exit")
         ]
@@ -321,11 +341,11 @@ def main_menu():
             table.add_row(str(i+1), desc)
         console.print(Align.center(table))
     else:
-        print("1. Bắt đầu game mới\n2. Tiếp tục game\n3. Credits\n4. Thoát")
+        print("1. Bắt đầu game mới\n2. Tiếp tục game\n3. Đọc cốt truyện\n4. Plot twist/Lore ẩn\n5. Credits\n6. Thoát")
     while True:
         c = input("Chọn số: ")
-        if c in "1234":
-            return ["new", "continue", "credit", "exit"][int(c)-1]
+        if c in "123456":
+            return ["new", "continue", "lore", "twist", "credit", "exit"][int(c)-1]
         print(color("Chọn lại!", "red"))
 
 def show_cutscene(key):
@@ -355,6 +375,20 @@ Kết thúc bí mật! Bạn đã giải phóng sức mạnh bóng tối, trở 
     t = scenes.get(key, "")
     rich_panel(t, title="Cốt truyện", style="cyan")
     time.sleep(1)
+    wait_enter()
+
+def show_lore():
+    print(color("=== CỐT TRUYỆN CHÍNH ===", "magenta"))
+    for i, line in enumerate(MAIN_STORY):
+        rich_panel(line, title=f"Chương {i+1}", style="cyan")
+        time.sleep(0.8)
+    wait_enter()
+
+def show_twist():
+    print(color("=== PLOT TWIST/Lore ẩn ===", "magenta"))
+    for t in PLOT_TWISTS:
+        rich_panel(t, style="magenta")
+        time.sleep(1)
     wait_enter()
 
 def show_credits():
@@ -469,7 +503,6 @@ class Hero:
             self.mp = self.max_mp
 
 def choose_class(hero, ach):
-    # Chỉ mở khi hero đạt level>=20 và chưa chuyển class
     print(color("Chọn class chuyển chức:", "cyan"))
     class_list = []
     for k,v in ADVANCED_CLASSES.items():
@@ -499,7 +532,7 @@ def choose_class(hero, ach):
         print(color("Chọn lại!", "red"))
 
 def jobchange_event(hero, ach):
-    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối!", "Nghi lễ chuyển chức", "magenta")
+    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối của mình!", "Chuyển chức", "magenta")
     time.sleep(1.2)
     print(color("Bạn phải chiến đấu với \"Bản Ngã Bóng Tối\"!", "red"))
     enemy_hp = 40 + hero.level * 2
@@ -530,7 +563,6 @@ def jobchange_event(hero, ach):
     if hero_hp > 0:
         print(color("Bạn đã vượt qua thử thách! Năng lượng mới tràn ngập trong bạn...", "green"))
         hidden_class = False
-        # Điều kiện mở class ẩn: đủ 5 kho báu + có pet + có Mảnh phép bí ẩn
         if hero.treasure_count >= 5 and hero.pets and "Mảnh phép bí ẩn" in hero.inventory:
             print(color("Bí ẩn bóng tối trỗi dậy trong bạn... Bạn đã mở khóa class ẩn!", "magenta"))
             hero.job_secret = True
@@ -614,7 +646,6 @@ def random_event(hero, pet, quests, ach, daynight):
     night = (daynight=="Đêm")
     event_prob = 40 if night or zone_danger else 22
     if hero.level >= 20 and not hero.job_unlocked:
-        # Đến cấp 20 tự động mở sự kiện chuyển chức ở làng
         if curr == "Làng":
             event = {"name": "nghi_le_chuyen_sinh", "desc": "Nghi lễ chuyển chức bắt đầu! Một thử thách sinh tử đang chờ bạn...", "reward": "jobchange"}
         else:
@@ -685,7 +716,6 @@ def battle(hero, pet, quests, ach, daynight):
     if curr == "Lâu đài" and hero.level < 6:
         print(color("Bạn chưa đủ mạnh để vào Lâu đài!", "red"))
         return
-    # Boss/mini-boss đặc biệt
     if curr == "Lâu đài":
         mobname = "Dark Lord"
     elif curr == "Khu rừng cổ" and random.randint(1, 100) < 50:
@@ -697,7 +727,7 @@ def battle(hero, pet, quests, ach, daynight):
     mob = dict(MONSTER_DATABASE[mobname])
     print(color(f"Gặp {mobname}!", "red"))
     show_ascii(mobname)
-    mhp = mob["HP"] + (hero.level//5)*6  # tăng độ khó!
+    mhp = mob["HP"] + (hero.level//5)*6
     while mhp > 0 and hero.hp > 0:
         print(color(f"Bạn: {hero.hp}/{hero.max_hp} | {mobname}: {mhp}", "yellow"))
         if pet:
@@ -891,6 +921,10 @@ def main():
         elif choice == "continue":
             hero, pet, quests, ach = load_game()
             if hero: break
+        elif choice == "lore":
+            show_lore()
+        elif choice == "twist":
+            show_twist()
         elif choice == "credit":
             show_credits()
         elif choice == "exit":
