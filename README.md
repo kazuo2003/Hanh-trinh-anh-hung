@@ -326,6 +326,29 @@ def show_quest_progress(quests):
             st = "[X]" if q["completed"] else "[ ]"
             print(f"{st} {q['name']}: {q['desc']}")
 
+def show_help():
+    lines = [
+        "[bold cyan]=== HƯỚNG DẪN CHƠI GAME ===[/bold cyan]",
+        "- Bạn sẽ vào vai anh hùng phiêu lưu qua các vùng đất, đánh quái, nhận nhiệm vụ và khám phá bí mật!",
+        "",
+        "[bold yellow]1. Kiếm tiền:[/bold yellow] Đánh quái vật, hoàn thành nhiệm vụ, hoặc gặp NPC/mini-game, bạn sẽ nhận được vàng.",
+        "[bold yellow]2. Pet (đồng hành):[/bold yellow] Có thể bắt pet ở menu Pet (số lượng tối đa 3 loại). Pet hỗ trợ bạn khi chiến đấu.",
+        "[bold yellow]3. Nâng cấp và chuyển nghề:[/bold yellow] Khi đủ level 20 (hoặc đủ điều kiện bí mật), đến Làng để chuyển nghề.",
+        "[bold yellow]4. Trang bị & vật phẩm:[/bold yellow] Trang bị giúp tăng chỉ số. Vật phẩm hồi máu/mana dùng trong trận hoặc ngoài trận.",
+        "[bold yellow]5. Kỹ năng:[/bold yellow] Mỗi class có bộ kỹ năng riêng. Chọn kỹ năng khi chiến đấu để tối ưu sức mạnh.",
+        "[bold yellow]6. Nhiệm vụ & thành tựu:[/bold yellow] Làm nhiệm vụ để nhận exp/vàng, đạt thành tựu để mở khóa nội dung đặc biệt.",
+        "[bold yellow]7. Cửa hàng:[/bold yellow] Gặp thương nhân hoặc vào mục cửa hàng để mua vật phẩm hữu ích.",
+        "[bold yellow]8. Chế tạo:[/bold yellow] Thu thập nguyên liệu để chế tạo trang bị mạnh mẽ, kể cả vũ khí truyền thuyết!",
+        "",
+        "[bold green]Mẹo:[/bold green] Hãy thử khám phá thật nhiều, mỗi vùng đất đều có bí mật, sự kiện và bất ngờ chờ đón bạn!",
+        "",
+        "Chúc bạn trở thành huyền thoại!"
+    ]
+    for line in lines:
+        rich_panel(line, style="cyan")
+        time.sleep(0.2)
+    wait_enter()
+
 def main_menu():
     if RICH:
         options = [
@@ -333,6 +356,7 @@ def main_menu():
             ("💾 Tiếp tục game", "continue"),
             ("📖 Đọc cốt truyện", "lore"),
             ("🌀 Plot twist/lore ẩn", "twist"),
+            ("📚 Hướng dẫn", "help"),
             ("📝 Credits", "credit"),
             ("❌ Thoát", "exit")
         ]
@@ -343,11 +367,11 @@ def main_menu():
             table.add_row(str(i+1), desc)
         console.print(Align.center(table))
     else:
-        print("1. Bắt đầu game mới\n2. Tiếp tục game\n3. Đọc cốt truyện\n4. Plot twist/Lore ẩn\n5. Credits\n6. Thoát")
+        print("1. Bắt đầu game mới\n2. Tiếp tục game\n3. Đọc cốt truyện\n4. Plot twist/Lore ẩn\n5. Hướng dẫn\n6. Credits\n7. Thoát")
     while True:
         c = input("Chọn số: ")
-        if c in "123456":
-            return ["new", "continue", "lore", "twist", "credit", "exit"][int(c)-1]
+        if c in "1234567":
+            return ["new", "continue", "lore", "twist", "help", "credit", "exit"][int(c)-1]
         print(color("Chọn lại!", "red"))
 
 def show_cutscene(key):
@@ -534,7 +558,7 @@ def choose_class(hero, ach):
         print(color("Chọn lại!", "red"))
 
 def jobchange_event(hero, ach):
-    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối!", "Chuyển nghề", "magenta")
+    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối của mình!", "Chuyển Chức", "magenta")
     time.sleep(1.2)
     print(color("Bạn phải chiến đấu với \"Bản Ngã Bóng Tối\"!", "red"))
     enemy_hp = 40 + hero.level * 2
@@ -920,6 +944,8 @@ def main():
             show_lore()
         elif choice == "twist":
             show_twist()
+        elif choice == "help":
+            show_help()
         elif choice == "credit":
             show_credits()
         elif choice == "exit":
