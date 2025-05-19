@@ -49,6 +49,7 @@ AREA_LEVEL_HINT = {
 }
 
 BASE_CLASSES = {
+    "Vô nghề":   {"STR": 2, "DEX": 2, "VIT": 2, "INT": 2, "LUCK": 2, "HP": 18, "MP": 6},
     "Kiếm sĩ":   {"STR": 6, "DEX": 4, "VIT": 5, "INT": 2, "LUCK": 3, "HP": 32, "MP": 10},
     "Pháp sư":   {"STR": 2, "DEX": 3, "VIT": 4, "INT": 8, "LUCK": 4, "HP": 22, "MP": 24},
     "Sát thủ":   {"STR": 4, "DEX": 8, "VIT": 4, "INT": 2, "LUCK": 5, "HP": 26, "MP": 12},
@@ -70,6 +71,7 @@ ADVANCED_CLASSES = {
 }
 
 CLASS_SKILLS = {
+    "Vô nghề": [],
     "Kiếm sĩ": ["Chém nhanh", "Phòng ngự"],
     "Pháp sư": ["Quả cầu lửa", "Khiên phép"],
     "Sát thủ": ["Đâm lén", "Tàng hình"],
@@ -88,7 +90,7 @@ CLASS_SKILLS = {
 }
 
 ITEM_DATABASE = {
-    "Kiếm sắt": {"type": "vũ khí", "STR": 2, "desc": "Tăng 2 sức mạnh (Kiếm sĩ/Kiếm khách)", "quality": "thường", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
+    "Kiếm sắt": {"type": "vũ khí", "STR": 2, "desc": "Tăng 2 sức mạnh (Kiếm sĩ/Kiếm khách/Kiếm thánh)", "quality": "thường", "class": ["Kiếm sĩ","Kiếm khách","Kiếm thánh"]},
     "Gậy phép": {"type": "vũ khí", "INT": 3, "desc": "Tăng 3 trí tuệ (Pháp sư)", "quality": "thường", "class": ["Pháp sư","Pháp sư cấp cao","Pháp thần"]},
     "Dao găm": {"type": "vũ khí", "DEX": 2, "desc": "Tăng 2 nhanh nhẹn (Sát thủ)", "quality": "thường", "class": ["Sát thủ","Sát thủ bóng đêm","Bóng ma"]},
     "Cung gỗ": {"type": "vũ khí", "DEX": 2, "desc": "Tăng 2 nhanh nhẹn (Cung thủ)", "quality": "thường", "class": ["Cung thủ", "Xạ thủ", "Thợ săn huyền thoại"]},
@@ -443,15 +445,8 @@ class Hero:
         self.max_mp = base["MP"]
         self.mp = self.max_mp
         self.inventory = ["Thuốc máu", "Thuốc máu", "Thuốc máu"]
-        # Trang bị vũ khí đúng class
-        for item in ITEM_DATABASE:
-            it = ITEM_DATABASE[item]
-            if it.get("type") == "vũ khí" and baseclass in it.get("class", []):
-                self.equipment = {"vũ khí": item, "áo giáp": None, "nhẫn": None}
-                break
-        else:
-            self.equipment = {"vũ khí": None, "áo giáp": None, "nhẫn": None}
-        self.skills = CLASS_SKILLS[baseclass][:]
+        self.equipment = {"vũ khí": None, "áo giáp": None, "nhẫn": None}
+        self.skills = CLASS_SKILLS.get(baseclass, [])[:]
         self.map_x, self.map_y = 0, 0
         self.craft_count = 0
         self.treasure_count = 0
@@ -461,16 +456,17 @@ class Hero:
         self.job_changed = False
         self.job_secret = False
         self.base_class = baseclass
+
     def show(self, pet=None, daynight="Ngày"):
         show_status(self, pet, daynight)
         show_ascii(self.char_class if self.char_class in ["Kiếm sĩ","Pháp sư","Sát thủ","Cung thủ","Võ sư"] else "Hero", is_hero=True)
         show_map(self)
     def equip(self, item):
         it = ITEM_DATABASE[item]
-        # Kiểm tra class phù hợp khi trang bị vũ khí
-        if it["type"] == "vũ khí" and self.char_class not in it.get("class", []):
-            print(color(f"Class {self.char_class} không thể trang bị {item}!", "red"))
-            return
+        if it["type"] == "vũ khí":
+            if self.char_class not in it.get("class", []):
+                print(color(f"Class {self.char_class} không thể trang bị {item}!", "red"))
+                return
         self.equipment[it["type"]] = item
         print(color(f"Đã trang bị {item}!", "green"))
     def use_item(self, item):
@@ -491,8 +487,8 @@ class Hero:
     def gain_exp(self, amount):
         self.exp += amount
         up = False
-        while self.exp >= 30 + self.level*10:
-            self.exp -= 30 + self.level*10
+        while self.exp >= 30 + self.level * 10:
+            self.exp -= 30 + self.level * 10
             self.level += 1
             self.max_hp += 5
             self.max_mp += 2
@@ -505,17 +501,23 @@ class Hero:
 def choose_class(hero, ach):
     print(color("Chọn class chuyển chức:", "cyan"))
     class_list = []
-    for k,v in ADVANCED_CLASSES.items():
+    for k, v in ADVANCED_CLASSES.items():
         if v.get("hidden") and not hero.job_secret:
             continue
-        if v["base"] == hero.base_class:
+        # Nếu hero là Vô nghề, cho phép chọn tất cả nghề thường (không ẩn)
+        if hero.base_class == "Vô nghề" and not v.get("hidden"):
             class_list.append(k)
+        elif v["base"] == hero.base_class:
+            class_list.append(k)
+    if not class_list:
+        print(color("Không có class nào để chuyển!", "red"))
+        return
     for i, c in enumerate(class_list):
-        print(f"{i+1}. {c}")
+        print(f"{i + 1}. {c}")
     while True:
         idx = input("Nhập số: ")
         if idx.isdigit() and 1 <= int(idx) <= len(class_list):
-            cl = class_list[int(idx)-1]
+            cl = class_list[int(idx) - 1]
             print(color(f"Bạn quyết định trở thành {cl}!", "yellow"))
             stats = ADVANCED_CLASSES[cl]
             hero.char_class = cl
@@ -532,7 +534,7 @@ def choose_class(hero, ach):
         print(color("Chọn lại!", "red"))
 
 def jobchange_event(hero, ach):
-    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối của mình!", "Chuyển chức", "magenta")
+    rich_panel("Nghi lễ chuyển chức bắt đầu!\nBạn bước vào vòng sáng kỳ lạ... Đột nhiên, một bóng đen xuất hiện, thử thách bạn bằng chính bản thân bóng tối!", "Chuyển nghề", "magenta")
     time.sleep(1.2)
     print(color("Bạn phải chiến đấu với \"Bản Ngã Bóng Tối\"!", "red"))
     enemy_hp = 40 + hero.level * 2
@@ -543,18 +545,18 @@ def jobchange_event(hero, ach):
         print("1. Tấn công  2. Chịu đựng  3. Khích lệ bản thân")
         act = input("Chọn: ")
         if act == "1":
-            dmg = 8 + random.randint(0,3)
+            dmg = 8 + random.randint(0, 3)
             print(color(f"Bạn tấn công gây {dmg} sát thương!", "red"))
             enemy_hp -= dmg
         elif act == "2":
             print(color("Bạn phòng thủ, giảm sát thương lượt này!", "cyan"))
         elif act == "3":
             print(color("Bạn tự khích lệ, hồi phục 9 HP!", "green"))
-            hero_hp = min(hero.max_hp, hero_hp+9)
+            hero_hp = min(hero.max_hp, hero_hp + 9)
         else:
             print(color("Bạn bối rối, trượt lượt!", "red"))
         if enemy_hp > 0:
-            dmg = random.randint(6,12)
+            dmg = random.randint(6, 12)
             if act == "2": dmg //= 2
             hero_hp -= dmg
             print(color(f"Bản ngã bóng tối tấn công bạn gây {dmg} sát thương!", "red"))
@@ -645,7 +647,7 @@ def random_event(hero, pet, quests, ach, daynight):
     zone_danger = curr in ["Hang động", "Khu rừng cổ", "Núi tuyết", "Lâu đài"]
     night = (daynight=="Đêm")
     event_prob = 40 if night or zone_danger else 22
-    if hero.level >= 20 and not hero.job_unlocked:
+    if hero.level >= 20 and not hero.job_unlocked and hero.char_class == "Vô nghề":
         if curr == "Làng":
             event = {"name": "nghi_le_chuyen_sinh", "desc": "Nghi lễ chuyển chức bắt đầu! Một thử thách sinh tử đang chờ bạn...", "reward": "jobchange"}
         else:
@@ -742,6 +744,9 @@ def battle(hero, pet, quests, ach, daynight):
             print(color(f"Bạn tấn công {mobname} gây {dmg} sát thương!", "yellow"))
             mhp -= dmg
         elif act == "2":
+            if not hero.skills:
+                print(color("Bạn chưa có kỹ năng!", "red"))
+                continue
             print("Kỹ năng:")
             for i, s in enumerate(hero.skills):
                 print(f"{i+1}. {s}")
@@ -902,18 +907,8 @@ def main():
     while True:
         choice = main_menu()
         if choice == "new":
-            print(color("Chọn class khởi đầu:", "cyan"))
-            base_list = list(BASE_CLASSES.keys())
-            for i, c in enumerate(base_list):
-                print(f"{i+1}. {c}")
-            while True:
-                base_idx = input("Nhập số class: ")
-                if base_idx.isdigit() and 1 <= int(base_idx) <= len(base_list):
-                    baseclass = base_list[int(base_idx)-1]
-                    break
-                print(color("Chọn lại!", "red"))
             name = input("Đặt tên cho nhân vật: ")
-            hero = Hero(name, baseclass)
+            hero = Hero(name, "Vô nghề")
             pet = None
             quests = QuestSystem()
             ach = set()
@@ -935,23 +930,30 @@ def main():
         daynight = get_daynight()
         hero.show(pet, daynight)
         print(color("\n1. Di chuyển  2. Đánh quái  3. Pet  4. Túi đồ  5. Nhiệm vụ  6. Cửa hàng  7. Chế tạo  8. Thành tựu  9. Lưu game  0. Thoát", "yellow"))
-        if hero.level >= 20 and hero.job_unlocked and not hero.job_changed:
-            print(color("!! Bạn đã đủ điều kiện chuyển chức! Hãy đi đến Làng để kích hoạt nghi lễ chuyển sinh và chọn class.", "magenta"))
+        # Điều kiện chuyển nghề khi đủ level và chưa chuyển
+        if hero.char_class == "Vô nghề" and (hero.level >= 20 or (hero.treasure_count >= 5 and hero.pets and "Mảnh phép bí ẩn" in hero.inventory)):
+            print(color("!! Bạn đã đủ điều kiện chuyển nghề! Hãy đi đến Làng để kích hoạt nghi lễ chuyển sinh và chọn class.", "magenta"))
         act = input("Chọn hành động: ")
         if act == "1":
             print("W: lên  S: xuống  A: trái  D: phải")
             move = input("Đi: ").strip().upper()
-            x,y = hero.map_x, hero.map_y
+            x, y = hero.map_x, hero.map_y
             if move == "W" and x > 0: hero.map_x -= 1
-            elif move == "S" and x < len(MAP_LAYOUT)-1: hero.map_x += 1
+            elif move == "S" and x < len(MAP_LAYOUT) - 1: hero.map_x += 1
             elif move == "A" and y > 0: hero.map_y -= 1
-            elif move == "D" and y < len(MAP_LAYOUT[0])-1: hero.map_y += 1
+            elif move == "D" and y < len(MAP_LAYOUT[0]) - 1: hero.map_y += 1
             else:
                 print(color("Không thể đi!", "red"))
                 wait_enter()
                 continue
             transition_effect(MAP_LAYOUT[hero.map_x][hero.map_y])
-            random_event(hero, pet, quests, ach, daynight)
+            # Nếu đến Làng và đủ điều kiện chuyển nghề
+            curr_loc = MAP_LAYOUT[hero.map_x][hero.map_y]
+            if hero.char_class == "Vô nghề" and (hero.level >= 20 or (hero.treasure_count >= 5 and hero.pets and "Mảnh phép bí ẩn" in hero.inventory)) and curr_loc == "Làng" and not hero.job_unlocked:
+                hero.job_unlocked = True
+                jobchange_event(hero, ach)
+            else:
+                random_event(hero, pet, quests, ach, daynight)
         elif act == "2":
             battle(hero, pet, quests, ach, daynight)
             wait_enter()
