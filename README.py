@@ -779,7 +779,19 @@ class QuestSystem:
         self.quests = [dict(q) for q in QUEST_DATABASE]
         self.progress = {}
         self.craft = []
+        self.daily_quests = []
+        self.last_daily = None
+
+    def gen_daily_quests(self):
+        today = datetime.date.today()
+        if self.last_daily != today:
+            self.daily_quests = [
+                {"id": 100+random.randint(1,999), "name": "Nhiệm vụ ngày: Đánh bại 3 quái", "desc": "Đánh bại 3 quái bất kỳ.", "requirements": {"kill_any": 3}, "reward_exp": 25, "reward_gold": 10, "completed": False, "progress": 0},
+            ]
+            self.last_daily = today
+
     def on_kill(self, mob, place):
+        # Loại bỏ super().on_kill(mob, place)
         for q in self.quests:
             if q["completed"]: continue
             req = q["requirements"]
@@ -790,26 +802,42 @@ class QuestSystem:
                 if self.progress[mob] >= req["kill"][mob]:
                     q["completed"] = True
                     rich_panel(f"✅ Hoàn thành nhiệm vụ: {q['name']}!", "Nhiệm vụ", "yellow")
+        # Xử lý nhiệm vụ ngày
+        self.gen_daily_quests()
+        for q in self.daily_quests:
+            if q["completed"]: continue
+            if "kill_any" in q["requirements"]:
+                q["progress"] += 1
+                if q["progress"] >= q["requirements"]["kill_any"]:
+                    q["completed"] = True
+                    rich_panel(f"✅ Hoàn thành nhiệm vụ ngày: {q['name']}!", "Nhiệm vụ ngày", "yellow")
+
     def on_event(self, event, place):
+        # Loại bỏ super().on_event(event, place)
         for q in self.quests:
             if q["completed"]: continue
             req = q["requirements"]
             if req.get("event") == event and req.get("place") == place:
                 q["completed"] = True
                 rich_panel(f"✅ Hoàn thành nhiệm vụ: {q['name']}!", "Nhiệm vụ", "yellow")
+
     def on_craft(self, item):
+        # Loại bỏ super().on_craft(item)
         for q in self.quests:
             if q["completed"]: continue
             req = q["requirements"]
             if req.get("craft") == item:
                 q["completed"] = True
                 rich_panel(f"✅ Hoàn thành nhiệm vụ: {q['name']}!", "Nhiệm vụ", "yellow")
+
     def show(self):
         show_quest_progress(self.quests)
-    def __init__(self):
-        super().__init__()
-        self.daily_quests = []
-        self.last_daily = None
+        self.gen_daily_quests()
+        if self.daily_quests:
+            print("=== NHIỆM VỤ NGÀY ===")
+            for q in self.daily_quests:
+                st = "[X]" if q["completed"] else "[ ]"
+                print(f"{st} {q['name']}: {q['desc']}")
 
     def gen_daily_quests(self):
         # Tạo nhiệm vụ ngày mới mỗi ngày
@@ -821,7 +849,6 @@ class QuestSystem:
             self.last_daily = today
 
     def on_kill(self, mob, place):
-        super().on_kill(mob, place)
         # Xử lý nhiệm vụ ngày
         self.gen_daily_quests()
         for q in self.daily_quests:
@@ -834,7 +861,6 @@ class QuestSystem:
                     rich_panel(f"✅ Hoàn thành nhiệm vụ ngày: {q['name']}!", "Nhiệm vụ ngày", "yellow")
 
     def show(self):
-        super().show()
         self.gen_daily_quests()
         if self.daily_quests:
             print("=== NHIỆM VỤ NGÀY ===")
